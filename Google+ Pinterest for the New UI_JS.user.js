@@ -1050,6 +1050,10 @@ var GooglePlusPlus = (function ($$d) {
 			position: fixed; \
 			background-color: rgba(255, 255, 255, 0.75) ; \
 		} \
+		/* fix the indent */ \
+		.OK.NQ.bh { \
+			position: relative; \
+		} \
 		/* place the navigation buttons on the black bar */ \
 		@media (min-width: 1750px) { \
 			'+ css.getCondition(BLACK_NAVIGATION_EXIST) +'<fixedGoogleNavigationBar2> ~ <contentBorderArea> <filterByCircleOptions>, \
@@ -1059,6 +1063,8 @@ var GooglePlusPlus = (function ($$d) {
 				z-index: 990; \
 				background-color: transparent; \
 				position: fixed; \
+				width: 100%; \
+				max-width: 750px; \
 			} \
 			'+ css.getCondition(BLACK_NAVIGATION_EXIST) +'<fixedGoogleNavigationBar2> ~ <contentBorderArea> <filterByCircleOptions> .Mv, \
 			'+ css.getCondition(BLACK_NAVIGATION_EXIST) +'<fixedGoogleNavigationBar2> ~ <contentBorderArea> <filterByCircleOptions> .aU, \
@@ -1503,7 +1509,8 @@ var GooglePlusPlus = (function ($$d) {
 				css.enable(BRICK_PARA_ATTR, index);
 			if (brickParameters[index])
 				return brickParameters[index];
-			var para = brickParameters[index] = getBrickParameters(getMaxContainerWidth($windowWidth)), css_string ='';
+			var maxContainerWidth = getMaxContainerWidth($windowWidth),
+				para = brickParameters[index] = getBrickParameters(maxContainerWidth), css_string ='';
 			// squeeze user name
 			var uname_style = '<post> <postUserName> { display: block; } \
 				<post> <postHeadArea> header { margin-top: -10px; } \
@@ -1516,8 +1523,7 @@ var GooglePlusPlus = (function ($$d) {
 					((index+1) * reCalculateLayoutEachXPixels -1) +'px) {';
 				//$K.debug('Current window width is '+ $windowWidth +'. Apply css Media Queries : '+ css_string);
 			}
-			if ((window.innerWidth) < 1750)
-			    css_string += '.kv { width:'+(getMaxContainerWidth(window.innerWidth)-13)+'px; position: fixed; }';
+			css_string += '<filterByCircleOptions> .jA.kv { width:'+ (maxContainerWidth - hiddenNavigationWidth - chatBoxBorderLine)+'px; }';
 			// when screen is too small, compress the user name block.  here window's width is only an approximate value
 			if (window.innerWidth < 1280)
 				css_string += uname_style;
@@ -1529,7 +1535,7 @@ var GooglePlusPlus = (function ($$d) {
 				<post>, <post> > div:not(<optionMenu>) { \
 					width:' + para.brickWidth +'px; \
 				} \
-				<postInnerVideo>, <postInnerImageContainer>, <videoThumbnail>, <myGames>, <gameStream> { \
+				<postInnerVideo>, <postInnerImageContainer>, <videoThumbnail>, <myGames>, <gameStream>, .KNb { \
 					width:' + para.brickWidth +'px !important; \
 				} \
 				<postInnerImageContainer>, <postInnerImage>, <postInnerImageThumbnail> { \
