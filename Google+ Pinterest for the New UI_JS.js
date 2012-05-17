@@ -1003,12 +1003,15 @@ var GooglePlusPlus = (function ($$d) {
 		#gb { width: 100%; position: fixed; } \
 		/* animation for white bar height change */ \
 		#gb, #gbx1 { \
-			transition: height .8s ease-out 1.5s; \
-			-moz-transition: height .8s ease-out 1.5s; \
-			-webkit-transition: height .8s ease-out 1.5s; \
+			transition: height .8s ease; \
+			-moz-transition: height .8s ease; \
+			-webkit-transition: height .8s ease; \
 		} \
 		/* transparent black */ \
 		<blackNavigationBar> { opacity: 0.8 } \
+		.kv:not(:hover) { \
+		   opacity: 0.8; \
+		} \
 		/* hide the white navigation bar */ \
 		#gb:not(:hover) #gbw #gbq { \
 			top: -80px; \
@@ -1026,9 +1029,9 @@ var GooglePlusPlus = (function ($$d) {
 		/* bottom line of the grey area */ \
 		.Tl.DAa.jaa { display: none; } \
 		#gbq { \
-			transition: top .8s ease-out 1.5s; \
-			-moz-transition: top .8s ease-out 1.5s; \
-			-webkit-transition: top .8s ease-out 1.5s; \
+			transition: top .8s ease; \
+			-moz-transition: top .8s ease; \
+			-webkit-transition: top .8s ease; \
 		} \
 		<maxmizedChatBox> { margin-top: -50px; } \
 		<contentPane> { margin-top: 0px; } \
@@ -1237,7 +1240,7 @@ var GooglePlusPlus = (function ($$d) {
 			hiddenChatBoxWidth = 50,	// the pixels on the sceen when the chat box is hidden
 			mainContentLeftMargin = 50,	// the margin-left of main content
 			chatBoxWidth = 211,	// chat box's width is 211px
-			chatBoxGreyBoard = 20,	// grey board (half)
+			chatBoxGreyBoard = 0,	// grey board (half)
 			chatBoxBorderLine = 1,	// the border line of grey board
 			postBlockWidth = 496,	// default bricks' width
 			perferColumn = 2,	// at least how many columns should be put into the container
@@ -1502,6 +1505,10 @@ var GooglePlusPlus = (function ($$d) {
 					((index+1) * reCalculateLayoutEachXPixels -1) +'px) {';
 				//console.debug('Current window width is '+ $windowWidth +'. Apply css Media Queries : '+ css_string);
 			}
+			if ((window.innerWidth) < 1750 && (css.select('<maxmizedChatBox>')))
+			    css_string += '.kv { width:'+(getMaxContainerWidth(window.innerWidth)-16)+'px; position: fixed; }';
+			if ((window.innerWidth) < 1750 && (!css.select('<maxmizedChatBox>')))
+			    css_string += '.kv { width:'+(getMaxContainerWidth(window.innerWidth)-11)+'px; position: fixed; }';
 			// when screen is too small, compress the user name block.  here window's width is only an approximate value
 			if (window.innerWidth < 1280)
 				css_string += uname_style;
@@ -1535,10 +1542,11 @@ var GooglePlusPlus = (function ($$d) {
 			var _chatBoxWidth = css.pull(HIDE_CHATBOX) ? hiddenChatBoxWidth : chatBoxWidth,
 				_chatBoxGreyBoard = chatBoxGreyBoard,
 				_chatBoxBorderLine = chatBoxBorderLine;
+                _hiddenNavigationWidth = hiddenNavigationWidth;
 			if (!css.select('<maxmizedChatBox>')) {
-				_chatBoxWidth = _chatBoxGreyBoard = _chatBoxBorderLine = 0;
-			}
-			return $windowWidth - hiddenNavigationWidth - _chatBoxWidth - _chatBoxGreyBoard - _chatBoxBorderLine - mainContentLeftMargin;
+				_chatBoxWidth = _chatBoxGreyBoard = _chatBoxBorderLine = _hiddenNavigationWidth = 0;
+            }
+			return $windowWidth - _hiddenNavigationWidth - _chatBoxWidth - _chatBoxBorderLine - mainContentLeftMargin;
 		}
 		
 		// re-calculate parameters based on container width
@@ -1548,7 +1556,7 @@ var GooglePlusPlus = (function ($$d) {
 				
 			if (!column) {
 				column = Math.round(containerWidth / (postBlockWidth + paddingH));
-				// at least three columns should be ensured to display
+				// at least two columns should be ensured to display
 				column =  column > perferColumn ? column : perferColumn;
 			}
 			var postBrickWidth = Math.floor($containerWidth / column - paddingH);
