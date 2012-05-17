@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name Google+ Pinterest for the New UI_JS
-// @version	0.5a
+// @version	0.5ab
 // @id	google_plus_ui_sucks_pinterest_pokerface_mod_js
 // @updateURL	  http://userscripts.org/scripts/source/130955.meta.js
 // @namespace	  in.co.tossing.toolkit.google
@@ -808,7 +808,7 @@ var $K = KissogramToolkit = (function ($$d) {
 
 	function _debug($msg) {
 		if (DEBUG_ON)
-			console.debug($msg);
+			$K.debug($msg);
 	}
 	// Main function begin ========================================
 	
@@ -842,7 +842,7 @@ var $K = KissogramToolkit = (function ($$d) {
 
 var GooglePlusPlus = (function ($$d) {
 
-	console.debug('Google Plus Plus is now loaded!');
+	$K.debug('Google Plus Plus is now loaded!');
 
 	var CSS_DICTIONARY = [
 		[/<postLocked>/g, '.postLocked'],
@@ -862,7 +862,8 @@ var GooglePlusPlus = (function ($$d) {
 		[/<leftSideNavigation>/g, '.NPb.k5'],
 		[/<chatBox>/g, '.kba.SSb'],	// maxmized chatbox
 		[/<maxmizedChatBox>/g, '<chatBox>.o8a'],	// chatbox
-		[/<fixedGoogleNavigationBar>/g, '.GJa'],	// the GJa class only appears when the top navigation bar is fixed
+		[/<fixedGoogleNavigationBar>/g, '.GJa'],	// the GJa & gEb class only appears when the top navigation bar is fixed
+		[/<fixedGoogleNavigationBar2>/g, '.gEb'],
 		[/<trendingBox>/g, '.ksa.a-f-e'],
 		[/<postMainContent>/g, '.Gn'],
 		[/<shareBoxContainer>/g, '<streamMainContent> .Sea'],
@@ -870,10 +871,11 @@ var GooglePlusPlus = (function ($$d) {
 		[/<postComment>/g, '.Hj.NB'],
 		[/<postTextContent>/g, '<postMainContent> > .Gm.Cs'],
 		[/<nothingSharedYet>/g, '<streamContainer> > .Zi'],
+		[/<filterByCircleOptions>/g, '.PK'],
 		[/<contentPane>/g, '#contentPane'],
 		[/<blockLeftArrow>/g, '.MA'],
 		[/<greyContentBorderArea>/g, '.maa.Q0a'],
-		[/<contentBorderArea>/g, '.naa.pMa'],		
+		[/<contentBorderArea>/g, '.naa.pMa'],
 		[/<postHeadArea>/g, '.FE'],	// the header are of a post
 		[/<postTimeAndCircle>/g, '<postHeadArea> .DA.Jd'],
 		[/<postTime>/g, '<postTimeAndCircle> .Mq.Gg'],
@@ -949,7 +951,9 @@ var GooglePlusPlus = (function ($$d) {
 		<leftSideNavigation>:not(:hover) { left: -90px; } \
 		<greyContentBorderArea>, <contentBorderArea> { margin-left: 10px !important; } \
 		/* bottom line of the white navigation bar */ \
-		<leftSideNavigation>.gEb:not(:hover) ~ <contentBorderArea> <navigationBarBottomLine> { left : 11px; } \
+		<leftSideNavigation>.gEb:not(:hover) ~ <contentBorderArea> <navigationBarBottomLine> { \
+			left : 11px; \
+		} \
 		<leftSideNavigation>:not(:hover) .NWShHf.pQV9re { \
 			margin-left: 90px; \
 		} \
@@ -1004,15 +1008,12 @@ var GooglePlusPlus = (function ($$d) {
 		#gb { width: 100%; position: fixed; } \
 		/* animation for white bar height change */ \
 		#gb, #gbx1 { \
-			transition: height .8s ease; \
-			-moz-transition: height .8s ease; \
-			-webkit-transition: height .8s ease; \
+			transition: height .8s ease .4s; \
+			-moz-transition: height .8s ease .4s; \
+			-webkit-transition: height .8s ease .4s; \
 		} \
 		/* transparent black */ \
 		<blackNavigationBar> { opacity: 0.8 } \
-		.kv:not(:hover) { \
-		   opacity: 0.8; \
-		} \
 		/* hide the white navigation bar */ \
 		#gb:not(:hover) #gbw #gbq { \
 			top: -80px; \
@@ -1030,9 +1031,9 @@ var GooglePlusPlus = (function ($$d) {
 		/* bottom line of the grey area */ \
 		.Tl.DAa.jaa { display: none; } \
 		#gbq { \
-			transition: top .8s ease; \
-			-moz-transition: top .8s ease; \
-			-webkit-transition: top .8s ease; \
+			transition: top .8s ease .4s; \
+			-moz-transition: top .8s ease .4s; \
+			-webkit-transition: top .8s ease .4s; \
 		} \
 		<maxmizedChatBox> { margin-top: -50px; } \
 		<contentPane> { margin-top: 0px; } \
@@ -1043,38 +1044,40 @@ var GooglePlusPlus = (function ($$d) {
 	
 	// new style that enable auto hiding the left side menu
 	css.set(
-		// place the navigation buttons on the black bar
-		'@media (min-width: 1750px) { \
-			'+ css.getCondition(BLACK_NAVIGATION_EXIST) +'<fixedGoogleNavigationBar> ~ #content nav[role="navigation"], \
-			'+ css.getCondition(BLACK_NAVIGATION_EXIST) +'<fixedGoogleNavigationBar> ~ #content nav[role="navigation"] .OK.NQ { \
-				position:fixed; \
+		' \
+		<filterByCircleOptions> .jA.kv { \
+			border-bottom : 0px; \
+			position: fixed; \
+			background-color: rgba(255, 255, 255, 0.75) ; \
+		} \
+		/* place the navigation buttons on the black bar */ \
+		@media (min-width: 1750px) { \
+			'+ css.getCondition(BLACK_NAVIGATION_EXIST) +'<fixedGoogleNavigationBar2> ~ <contentBorderArea> <filterByCircleOptions>, \
+			'+ css.getCondition(BLACK_NAVIGATION_EXIST) +'<fixedGoogleNavigationBar2> ~ <contentBorderArea> <filterByCircleOptions> .OK.NQ { \
 				top: -14px; \
 				left: 750px; \
 				z-index: 990; \
 				background-color: transparent; \
-				max-width: 750px; \
-				width: 100%; \
+				position: fixed; \
 			} \
-			'+ css.getCondition(BLACK_NAVIGATION_EXIST) +'<fixedGoogleNavigationBar> ~ #content nav[role="navigation"] .Mv, \
-			'+ css.getCondition(BLACK_NAVIGATION_EXIST) +'<fixedGoogleNavigationBar> ~ #content nav[role="navigation"] .aU, \
-			'+ css.getCondition(BLACK_NAVIGATION_EXIST) +'<fixedGoogleNavigationBar> ~ #content nav[role="navigation"] .dK.a-o { \
+			'+ css.getCondition(BLACK_NAVIGATION_EXIST) +'<fixedGoogleNavigationBar2> ~ <contentBorderArea> <filterByCircleOptions> .Mv, \
+			'+ css.getCondition(BLACK_NAVIGATION_EXIST) +'<fixedGoogleNavigationBar2> ~ <contentBorderArea> <filterByCircleOptions> .aU, \
+			'+ css.getCondition(BLACK_NAVIGATION_EXIST) +'<fixedGoogleNavigationBar2> ~ <contentBorderArea> <filterByCircleOptions> .dK.a-o { \
 				/* Profile name, hangouts, search text */ \
 				color: white; \
 				overflow-x: hidden; \
 				max-width: 180px; \
 			} \
-			/* background of navigation bar */ \
-			.jA.kv  { \
-				background-color: transparent; \
-				height: 0; \
-				border-bottom : 0px; \
-			} \
 			/* menu */ \
 			<optionMenu> { \
 				z-index: 995 !important; \
 			} \
+			/* background of navigation bar */ \
+			<filterByCircleOptions> .jA.kv  { \
+				height: 0; \
+			} \
 			/* low the stream on profile page */ \
-			'+ css.getCondition(BLACK_NAVIGATION_EXIST) +'<fixedGoogleNavigationBar> ~ #content \
+			'+ css.getCondition(BLACK_NAVIGATION_EXIST) +'<fixedGoogleNavigationBar2> ~ <contentBorderArea> \
 				<mainContent>:not(.a-f-e):not(.hca) { \
 				margin-top: 70px; \
 			} \
@@ -1113,14 +1116,21 @@ var GooglePlusPlus = (function ($$d) {
 	css.set('<trendingBox> { display:none }');
 	css.push(DISPLAY_CIRCLE_INFO,
 		' \
-		/* "xxx" have you in circle */ \
+		/* "xxx" have you in circle / trending box */ \
 		<mainContent> <profilePage> <trendingBox> { \
-			display:block; \
-			margin-top:10px; \
-			z-index:10; \
-			background-color:white; \
-			border:1px solid #ccc; \
-		}'
+			display: inline-block; \
+			z-index: 10; \
+			background-color: white; \
+			position: relative; \
+			float: right; \
+			width: 290px; \
+		} \
+		<mainContent> <profilePage> <trendingBox> { \
+			border: 1px solid #ccc; \
+			/* original width is 260px */ \
+			width: 260px; \
+		} \
+		'
 	);
 
 	var isNewPostArrived = (function () {
@@ -1216,7 +1226,7 @@ var GooglePlusPlus = (function ($$d) {
 		})();
 		
 		function _init() {
-			console.debug("Layout+ Timeline is now loaded.");
+			$K.debug("Layout+ Timeline is now loaded.");
 			_init_CSS();
 			$K.url.onUrlChange(
 				function () {
@@ -1239,9 +1249,9 @@ var GooglePlusPlus = (function ($$d) {
 			leftNavigationWidth = 100,	// left navigation's width is 100px
 			hiddenNavigationWidth = 10,	// the width after hiding
 			hiddenChatBoxWidth = 50,	// the pixels on the sceen when the chat box is hidden
-			mainContentLeftMargin = 50,	// the margin-left of main content
+			mainContentLeftMargin = 40 + hiddenNavigationWidth,	// the margin-left of main content
 			chatBoxWidth = 211,	// chat box's width is 211px
-			chatBoxGreyBoard = 0,	// grey board (half)
+			chatBoxGreyBoard = 20,	// grey board (half)
 			chatBoxBorderLine = 1,	// the border line of grey board
 			postBlockWidth = 496,	// default bricks' width
 			perferColumn = 2,	// at least how many columns should be put into the container
@@ -1504,12 +1514,10 @@ var GooglePlusPlus = (function ($$d) {
 					(index * reCalculateLayoutEachXPixels) +
 					'px) and (max-width:'+
 					((index+1) * reCalculateLayoutEachXPixels -1) +'px) {';
-				//console.debug('Current window width is '+ $windowWidth +'. Apply css Media Queries : '+ css_string);
+				//$K.debug('Current window width is '+ $windowWidth +'. Apply css Media Queries : '+ css_string);
 			}
-			if ((window.innerWidth) < 1750 && (css.select('<maxmizedChatBox>')))
-			    css_string += '.kv { width:'+(getMaxContainerWidth(window.innerWidth)-16)+'px; position: fixed; }';
-			if ((window.innerWidth) < 1750 && (!css.select('<maxmizedChatBox>')))
-			    css_string += '.kv { width:'+(getMaxContainerWidth(window.innerWidth)-11)+'px; position: fixed; }';
+			if ((window.innerWidth) < 1750)
+			    css_string += '.kv { width:'+(getMaxContainerWidth(window.innerWidth)-13)+'px; position: fixed; }';
 			// when screen is too small, compress the user name block.  here window's width is only an approximate value
 			if (window.innerWidth < 1280)
 				css_string += uname_style;
@@ -1543,11 +1551,9 @@ var GooglePlusPlus = (function ($$d) {
 			var _chatBoxWidth = css.pull(HIDE_CHATBOX) ? hiddenChatBoxWidth : chatBoxWidth,
 				_chatBoxGreyBoard = chatBoxGreyBoard,
 				_chatBoxBorderLine = chatBoxBorderLine;
-                _hiddenNavigationWidth = hiddenNavigationWidth;
-			if (!css.select('<maxmizedChatBox>')) {
-				_chatBoxWidth = _chatBoxGreyBoard = _chatBoxBorderLine = _hiddenNavigationWidth = 0;
-            }
-			return $windowWidth - _hiddenNavigationWidth - _chatBoxWidth - _chatBoxBorderLine - mainContentLeftMargin;
+			if (!css.select('<maxmizedChatBox>'))
+				_chatBoxWidth = _chatBoxGreyBoard = _chatBoxBorderLine = 0;
+			return $windowWidth - _chatBoxWidth - _chatBoxGreyBoard - _chatBoxBorderLine - mainContentLeftMargin;
 		}
 		
 		// re-calculate parameters based on container width
@@ -1594,14 +1600,14 @@ var GooglePlusPlus = (function ($$d) {
 			$K.listen('#content', 'dragover',
 				function (e) {
 					if (e.preventDefault) e.preventDefault();
-					console.debug('dragover');
+					$K.debug('dragover');
 					//$K.mouse.gesture.zigzag.detect(e);
 					return false;
 				}
 			);
 			$K.listen('#content', 'dragenter',
 				function (e) {
-					console.debug('dropenter');
+					$K.debug('dropenter');
 					e.dataTransfer.dropEffect = 'move';
 					return false;
 				}
@@ -1609,7 +1615,7 @@ var GooglePlusPlus = (function ($$d) {
 			$K.listen('#content', 'drop',
 				function (e) {
 					if (e.stopPropagation) e.stopPropagation();
-					console.debug('drop content');
+					$K.debug('drop content');
 					var elem = e.target;
 					droppable = droppable && !css.is(elem, "uohZhe");
 					if (!droppable)
@@ -1628,7 +1634,7 @@ var GooglePlusPlus = (function ($$d) {
 				function (e) {
 					if (e.stopPropagation) e.stopPropagation();
 					if (e.preventDefault) e.preventDefault();
-					console.debug('drop');
+					$K.debug('drop');
 					resetPostPosition(lastDraggedPostId);
 					droppable = false;
 					return false;
@@ -1637,7 +1643,7 @@ var GooglePlusPlus = (function ($$d) {
 			
 			return function (e) {
 				var elem = e.target, post;
-				console.debug(elem);
+				$K.debug(elem);
 				if (elem.tagName == "HEADER")
 					elem = elem.parentElement;
 				if (css.is(elem, "<postHeadArea>"))
@@ -1660,7 +1666,7 @@ var GooglePlusPlus = (function ($$d) {
 								dragY = e.clientY;
 								css.add(p.post, '<postDragging><postShorten>');
 								lastDraggedPostId = $pid;
-					console.debug('dragstart');
+					$K.debug('dragstart');
 								e.dataTransfer.effectAllowed = 'move';
 								$K.dataTransfer.setData('movePost', $pid);
 								p.fold(true);
@@ -1674,7 +1680,7 @@ var GooglePlusPlus = (function ($$d) {
 						(function ($pid) {
 							return function (e) {
 								var p = $$data.posts[$pid];
-					console.debug('dragend');
+					$K.debug('dragend');
 								css.remove(p.post, '<postDragging><postShorten>');
 								// if this is a zigzag gesture
 								if ($K.mouse.gesture.zigzag.success) {
@@ -1761,7 +1767,7 @@ var GooglePlusPlus = (function ($$d) {
 			
 			// inset a element into a column
 			function insertBrickInto($id, $elem, $column) {
-			//console.debug($elem);
+			//$K.debug($elem);
 				if (!$elem)
 					return;
 				if (!$$data.other[$id])
@@ -1888,7 +1894,7 @@ var GooglePlusPlus = (function ($$d) {
 		var layout = (function () {
 			var maxHeight = 0;
 			return function ($opt) {
-				//console.debug('G++ Pinterest: Re-layout at '+ new Date().getTime());
+				//$K.debug('G++ Pinterest: Re-layout at '+ new Date().getTime());
 				var brickPara = loadBrickCSS(window.innerWidth),
 					height = replaceBricks(brickPara, $opt),
 					moreButtonContainer = css.selectAll('<streamMoreButtonContainer>'),
@@ -1911,7 +1917,7 @@ var GooglePlusPlus = (function ($$d) {
 		var delayedLayout = $K.tickTork(layout, { delay: 2000 });
 		
 		function _init() {
-			console.debug("Layout+ Pinterest is now loaded.");
+			$K.debug("Layout+ Pinterest is now loaded.");
 			_init_CSS();
 			$K.url.onUrlChange(
 				function () {
@@ -1928,7 +1934,7 @@ var GooglePlusPlus = (function ($$d) {
 		};
 	})();
 
-	console.debug("Layout+ is now loaded.  Current URL "+ $K.url);
+	$K.debug("Layout+ is now loaded.  Current URL "+ $K.url);
 	
 	// cancel a bunch of action
 	$K.url.onUrlChange(function () {
