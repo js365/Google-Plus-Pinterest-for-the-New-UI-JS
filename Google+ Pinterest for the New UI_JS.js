@@ -1,7 +1,7 @@
 // ==UserScript==
-// @name Google+ Pinterest for the New UI
-// @version	0.5
-// @id	google_plus_ui_sucks_pinterest_pokerface
+// @name Google+ Pinterest for the New UI_JS
+// @version	0.5a
+// @id	google_plus_ui_sucks_pinterest_pokerface_mod_js
 // @updateURL	  http://userscripts.org/scripts/source/130955.meta.js
 // @namespace	  in.co.tossing.toolkit.google
 // @license	GPL v3 or later version
@@ -10,6 +10,7 @@
 // @exclude	*://plus.google.com/up/accounts/upgrade/*
 // @include		*://plus.google.com/*
 // @author	Pokerface - Kevin
+// @modified by Jeffrey Sung
 // ==/UserScript==
 
 /*
